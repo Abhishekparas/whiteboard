@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+
+    <body>
+        <div class="tools">
+            <div class="toolbar">
+                <div class="tool active-tool" id="pencil">
+                    <div class="tool-img">
+                        <img src="./images/pen-tool.svg" alt="" />
+                    </div>
+                    <div class="tool-options" id="pencil-options">
+                        <div class="tool-size">
+                            <input
+                                type="range"
+                                id="pencil-size"
+                                value="1"
+                                ,
+                                min="1"
+                                ,
+                                max="40"
+                            />
+                        </div>
+                        <div class="tool-color">
+                            <div class="red"></div>
+                            <div class="blue"></div>
+                            <div class="yellow"></div>
+                            <div class="black"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool" id="eraser">
+                    <div class="tool-img">
+                        <img src="./images/eraser.svg" alt="" />
+                    </div>
+                    <div class="tool-options" id="eraser-options">
+                        <div class="tool-size">
+                            <input
+                                type="range"
+                                id="eraser-size"
+                                value="1"
+                                ,
+                                min="1"
+                                ,
+                                max="40"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="tool" id="stickyTool">
+                    <div class="tool-img">
+                        <img src="./images/sticky-note.svg" alt="" />
+                    </div>
+                </div>
+                <div class="tool">
+                    <label for="img-upload" id="img-label">
+                        <div class="tool-img">
+                            <img src="./images/gallery.svg" alt="" />
+                        </div>
+                        <input
+                            type="file"
+                            id="img-upload"
+                            style="display: none"
+                        />
+                    </label>
+                </div>
+                <div class="tool" id="download-img">
+                    <div class="tool-img">
+                        <img src="./images/cloud-computing.svg" alt="" />
+                    </div>
+                </div>
+                <div class="tool" id="undo">
+                    <div class="tool-img">
+                        <img src="./images/undo.svg" alt="" />
+                    </div>
+                </div>
+                <div class="tool" id="redo">
+                    <div class="tool-img">
+                        <img src="./images/redo.svg" alt="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="drawing-area">
+            <canvas id="canvas"></canvas>
+        </div>
+        <!-- <div class="stickyPad">
+        <div class="stickyNav">
+            <div class="minimize"></div>
+            <div class="close"></div>
+        </div>
+        <div class="content">
+            <textarea name="" id="stickyText" cols="30" rows="10"></textarea>
+        </div>
+    </div> -->
+        <!-- variables declared in script.js can be used in tools.js -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+            integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+            crossorigin="anonymous"
+        ></script>
+        <script src="./script.js"></script>
+        <script src="./tools.js"></script>
+        <script src="./sticky.js"></script>
+        <script src="./image.js"></script>
+        <script src="./util.js"></script>
+        <script>
+            const socket = io.connect(
+                "https://whiteboard-dev-server.herokuapp.com/"
+            );
+
+            // socket.on("broadcast",(data) => {
+            //     console.log(data);
+            // })
+            socket.on("md", (point) => {
+                ctx.strokeStyle = point.penColor;
+                ctx.lineWidth = point.penWidth;
+                ctx.beginPath();
+                ctx.moveTo(point.x, point.y);
+            });
+            socket.on("mm", (point) => {
+                ctx.strokeStyle = point.penColor;
+                ctx.lineWidth = point.penWidth;
+                ctx.lineTo(point.x, point.y);
+                ctx.stroke();
+            });
+        </script>
+    </body>
+</html>
